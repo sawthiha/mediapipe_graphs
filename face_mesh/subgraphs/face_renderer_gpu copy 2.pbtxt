@@ -1,0 +1,62 @@
+# MediaPipe face mesh rendering subgraph.
+
+type: "FaceRendererGpu"
+
+# GPU image. (GpuBuffer)
+input_stream: "IMAGE:input_image"
+# Regions of interest calculated based on palm detections.
+# (std::vector<NormalizedRect>)
+input_stream: "NORM_RECTS:rects"
+input_stream: "ALIGNMENTS:multi_face_alignments"
+
+# GPU image with rendered data. (GpuBuffer)
+output_stream: "IMAGE:output_image"
+
+node {
+  calculator: "ImagePropertiesCalculator"
+  input_stream: "IMAGE_GPU:input_image"
+  output_stream: "SIZE:image_size"
+}
+
+node {
+  calculator: "BeginLoopAlignmentVectorCalculator"
+  input_stream: "ITERABLE:multi_face_alignments"
+  output_stream: "ITEM:face_alignment"
+  output_stream: "BATCH_END:end_timestamp"
+}
+
+node {
+  calculator: "FaceAlignmentToRenderDataCalculator"
+  input_stream: "ALIGNMENT:face_alignment"
+  output_stream: "RENDER:alignment_render_data"
+}
+
+node {
+  calculator: "EndLoopRenderDataCalculator"
+  input_stream: "ITEM:alignment_render_data"
+  input_stream: "BATCH_END:end_timestamp"
+  output_stream: "ITERABLE:multi_face_alignments_render_data"
+}
+
+# Converts normalized rects to drawing primitives for annotation overlay.
+node {
+  calculator: "RectToRenderDataCalculator"
+  input_stream: "NORM_RECTS:rects"
+  output_stream: "RENDER_DATA:rects_render_data"
+  node_options: {
+    [type.googleapis.com/mediapipe.RectToRenderDataCalculatorOptions] {
+      filled: false
+      color { r: 255 g: 0 b: 0 }
+      thickness: 4.0
+    }
+  }
+}
+
+# Draws annotations and overlays them on top of the input images.
+node {
+  calculator: "AnnotationOverlayCalculator"
+  input_stream: "IMAGE_GPU:input_image"
+  input_stream: "rects_render_data"
+  #input_stream: "VECTOR:0:multi_face_alignments_render_data"
+  output_stream: "IMAGE_GPU:output_image"
+}
