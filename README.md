@@ -10,5 +10,5 @@ Custom graphs for Mediapipe framework.
 You simply put this source directory as submodule into `mediapipe/graphs/custom` or anywhere else inside `mediapipe` where you can reference from bazel. Or, simply run the following commands from the `mediapipe` root directory.
 
 ```bash
-git submodule add git@github.com:sawthiha/mediapipe_graphs.git mediapipe/graphs/custom
+git submodule add https://github.com/sawthiha/mediapipe_graphs.git mediapipe/graphs/custom
 ```
