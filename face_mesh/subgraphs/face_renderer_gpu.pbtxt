@@ -58,8 +58,15 @@ node {
 node {
   calculator: "AnnotationOverlayCalculator"
   input_stream: "IMAGE_GPU:input_image"
+  
+  # By pass the unbounded wait in case no render data (i.e. No face detected)
+  # input_stream_handler {
+  #  input_stream_handler: "ImmediateInputStreamHandler"
+  # }
+
   input_stream: "alignment_render_data"
   input_stream: "blink_render_data"
   input_stream: "rects_render_data"
+
   output_stream: "IMAGE_GPU:output_image"
 }

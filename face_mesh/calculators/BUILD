@@ -23,12 +23,6 @@ cc_library(
     deps = [
         "//mediapipe/calculators/util:landmarks_to_render_data_calculator",
         "//mediapipe/calculators/util:landmarks_to_render_data_calculator_cc_proto",
-        "//mediapipe/calculators/custom/util:landmark_standardization",
-        "//mediapipe/calculators/custom/face_activity:face_movement_calculator",
-        "//mediapipe/calculators/custom/face_alignment:face_alignment_calculator",
-        "//mediapipe/calculators/custom/face_alignment:face_alignment_to_render_data_calculator",
-        "//mediapipe/calculators/custom/eye_blink:eye_blink_calculator",
-        "//mediapipe/calculators/custom/eye_blink:eye_blink_to_render_data_calculator",
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework:calculator_options_cc_proto",
         "//mediapipe/framework/formats:landmark_cc_proto",
