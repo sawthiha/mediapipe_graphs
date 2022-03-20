@@ -22,13 +22,25 @@ licenses(["notice"])
 package(default_visibility = ["//visibility:public"])
 
 cc_library(
+    name = "custom_calculators",
+    deps = [
+        "//mediapipe/calculators/custom/util:landmark_standardization",
+        "//mediapipe/calculators/custom/face_alignment:face_alignment_calculator",
+        "//mediapipe/calculators/custom/eye_blink:eye_blink_calculator",
+        "//mediapipe/calculators/custom/face_activity:face_movement_calculator",
+    ],
+)
+
+cc_library(
     name = "desktop_calculators",
     deps = [
         "//mediapipe/calculators/core:constant_side_packet_calculator",
         "//mediapipe/calculators/video:opencv_video_decoder_calculator",
         "//mediapipe/calculators/video:opencv_video_encoder_calculator",
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_cpu",
         "//mediapipe/modules/face_landmark:face_landmark_front_cpu",
+
+        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_cpu",
+        ":custom_calculators",
     ],
 )
 
@@ -37,8 +49,10 @@ cc_library(
     deps = [
         "//mediapipe/calculators/core:constant_side_packet_calculator",
         "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_cpu",
         "//mediapipe/modules/face_landmark:face_landmark_front_cpu",
+
+        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_cpu",
+        ":custom_calculators",
     ],
 )
 
@@ -47,8 +61,10 @@ cc_library(
     deps = [
         "//mediapipe/calculators/core:constant_side_packet_calculator",
         "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_gpu",
         "//mediapipe/modules/face_landmark:face_landmark_front_gpu",
+
+        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_gpu",
+        ":custom_calculators",
     ],
 )
 
@@ -56,8 +72,10 @@ cc_library(
     name = "mobile_calculators",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_gpu",
         "//mediapipe/modules/face_landmark:face_landmark_front_gpu",
+
+        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_gpu",
+        ":custom_calculators",
     ],
 )
 

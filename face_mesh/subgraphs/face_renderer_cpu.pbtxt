@@ -61,5 +61,11 @@ node {
   input_stream: "alignment_render_data"
   input_stream: "blink_render_data"
   input_stream: "rects_render_data"
+
+  # By pass the unbounded wait in case no render data (i.e. No face detected)
+  # input_stream_handler {
+  #  input_stream_handler: "ImmediateInputStreamHandler"
+  # }
+
   output_stream: "IMAGE:output_image"
 }
