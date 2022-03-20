@@ -24,6 +24,7 @@ cc_library(
         "//mediapipe/calculators/util:landmarks_to_render_data_calculator",
         "//mediapipe/calculators/util:landmarks_to_render_data_calculator_cc_proto",
         "//mediapipe/calculators/custom/util:landmark_standardization",
+        "//mediapipe/calculators/custom/face_activity:face_movement_calculator",
         "//mediapipe/calculators/custom/face_alignment:face_alignment_calculator",
         "//mediapipe/calculators/custom/face_alignment:face_alignment_to_render_data_calculator",
         "//mediapipe/calculators/custom/eye_blink:eye_blink_calculator",
