@@ -9,6 +9,28 @@ output_stream: "output_video"
 # landmarks. (std::vector<NormalizedLandmarkList>)
 output_stream: "multi_face_landmarks"
 
+# Collection of detected/processed faces, each represented as a list of
+# landmarks. (std::vector<NormalizedLandmarkList>)
+output_stream: "multi_face_landmarks"
+
+# Standardized Landmarks (std::vector<NormalizedLandmarkList>)
+output_stream: "multi_face_std_landmarks"
+
+# Alignment data (std::vector<std::map<std::string, double> >)
+# {
+#   "horizontal_align": 0.0 being neutral, + being right, - being left
+#   "vertical_align":   0.0 being neutral, + being down,  - being up
+# }
+output_stream: "multi_face_alignments"
+
+# Eye blink data (std::vector<std::map<std::string, double> >)
+# {
+#   'left': double, lower value means eye is closing
+#   'right': double, lower value means eye is closing
+#   'threshold': double, a threshold value for detection, e.g. left eye is blinking if 'left' < 'threshold'
+# }
+output_stream: "multi_face_blinks"
+
 # Throttles the images flowing downstream for flow control. It passes through
 # the very first incoming image unaltered, and waits for downstream nodes
 # (calculators and subgraphs) in the graph to finish their tasks before it
@@ -55,12 +77,34 @@ node {
   output_stream: "ROIS_FROM_DETECTIONS:face_rects_from_detections"
 }
 
+# Standardize the landmarks
+node {
+  calculator: "LandmarkStandardizationCalculator"
+  input_stream: "IMAGE:throttled_input_video"
+  input_stream: "multi_face_landmarks"
+  output_stream: "multi_face_std_landmarks"
+}
+
+# Detect alignments
+node {
+  calculator: "FaceAlignmentCalculator"
+  input_stream: "multi_face_std_landmarks"
+  output_stream: "multi_face_alignments"
+}
+
+# Detect Eye blink
+node {
+  calculator: "EyeBlinkCalculator"
+  input_stream: "multi_face_std_landmarks"
+  output_stream: "multi_face_blinks"
+}
+
 # Subgraph that renders face-landmark annotation onto the input image.
 node {
   calculator: "FaceRendererGpu"
   input_stream: "IMAGE:throttled_input_video"
-  input_stream: "LANDMARKS:multi_face_landmarks"
   input_stream: "NORM_RECTS:face_rects_from_landmarks"
-  input_stream: "DETECTIONS:face_detections"
+  input_stream: "ALIGNMENTS:multi_face_alignments"
+  input_stream: "BLINKS:multi_face_blinks"
   output_stream: "IMAGE:output_video"
 }
