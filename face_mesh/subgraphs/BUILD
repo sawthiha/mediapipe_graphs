@@ -27,15 +27,16 @@ cc_library(
         "//mediapipe/calculators/core:split_landmarks_calculator",
         "//mediapipe/calculators/util:annotation_overlay_calculator",
         "//mediapipe/calculators/util:detections_to_render_data_calculator",
+
         "//mediapipe/calculators/util:landmarks_to_render_data_calculator",
+        "//mediapipe/calculators/util:landmarks_to_render_data_calculator_cc_proto",
+
         "//mediapipe/calculators/util:rect_to_render_data_calculator",
         # "//mediapipe/framework/stream_handler:immediate_input_stream_handler",
 
         "//mediapipe/calculators/custom/face_alignment:face_alignment_to_render_data_calculator",
         "//mediapipe/calculators/custom/eye_blink:eye_blink_to_render_data_calculator",
 
-        "//mediapipe/calculators/util:landmarks_to_render_data_calculator",
-        "//mediapipe/calculators/util:landmarks_to_render_data_calculator_cc_proto",
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework:calculator_options_cc_proto",
         "//mediapipe/framework/formats:landmark_cc_proto",
