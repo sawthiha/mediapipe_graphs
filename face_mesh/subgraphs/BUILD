@@ -33,7 +33,18 @@ cc_library(
 
         "//mediapipe/calculators/custom/face_alignment:face_alignment_to_render_data_calculator",
         "//mediapipe/calculators/custom/eye_blink:eye_blink_to_render_data_calculator",
-        "//mediapipe/graphs/custom/face_mesh/calculators:face_landmarks_to_render_data_calculator",
+
+        "//mediapipe/calculators/util:landmarks_to_render_data_calculator",
+        "//mediapipe/calculators/util:landmarks_to_render_data_calculator_cc_proto",
+        "//mediapipe/framework:calculator_framework",
+        "//mediapipe/framework:calculator_options_cc_proto",
+        "//mediapipe/framework/formats:landmark_cc_proto",
+        "//mediapipe/framework/formats:location_data_cc_proto",
+        "//mediapipe/framework/port:ret_check",
+        "//mediapipe/util:color_cc_proto",
+        "//mediapipe/util:render_data_cc_proto",
+        "@com_google_absl//absl/memory",
+        "@com_google_absl//absl/strings",
     ],
 )
 
