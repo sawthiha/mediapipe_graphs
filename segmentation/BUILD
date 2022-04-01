@@ -14,3 +14,19 @@
 licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
+
+file_group(name = "full_segmentation_gpu_data",
+    srcs = [
+        "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_gpu.binarypb",
+        "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
+    ],
+)
+
+cc_library(name = "full_segmentation_gpu_deps",
+    deps = [
+        "//mediapipe/calculators/core:flow_limiter_calculator",
+        # "//mediapipe/calculators/image:recolor_calculator",
+        "//mediapipe/calculators/image:set_alpha_calculator",
+        "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
+    ],
+)
