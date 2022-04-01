@@ -15,7 +15,7 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-file_group(name = "full_segmentation_gpu_data",
+filegroup(name = "full_segmentation_gpu_data",
     srcs = [
         "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_gpu.binarypb",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
