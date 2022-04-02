@@ -21,6 +21,12 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
+exports_files(
+    srcs = glob(
+        ["*.pbtxt"]
+    )
+)
+
 cc_library(
     name = "custom_calculators",
     deps = [
