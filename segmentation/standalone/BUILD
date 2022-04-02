@@ -7,6 +7,12 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
+exports_files(
+    srcs = glob(
+        ["*.pbtxt"]
+    )
+)
+
 cc_library(
     name = "standalone_segmentation_gpu_deps",
     deps = [
