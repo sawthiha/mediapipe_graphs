@@ -34,6 +34,7 @@ node {
   output_stream: "SEGMENTATION_MASK:segmentation_mask"
 }
 
+# Set alpha according to the segmentation mask
 node {
   calculator: "SetAlphaCalculator"
   input_stream: "IMAGE_GPU:throttled_input_video"
