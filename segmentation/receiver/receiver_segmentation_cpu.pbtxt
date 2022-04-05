@@ -27,7 +27,6 @@ node {
   output_stream: "throttled_input_video"
 }
 
-
 # Parse Segmentation mask
 node {
   calculator: "RecolorCalculator"
