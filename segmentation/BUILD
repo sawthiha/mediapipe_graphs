@@ -19,6 +19,7 @@ filegroup(name = "full_segmentation_gpu_data",
     srcs = [
         "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_gpu.binarypb",
         "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_gpu.binarypb",
+        "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_gpu.binarypb",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
     ],
 )
@@ -36,6 +37,7 @@ filegroup(name = "full_segmentation_cpu_data",
     srcs = [
         "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_cpu.binarypb",
         "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_cpu.binarypb",
+        "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_cpu.binarypb",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
     ],
 )
