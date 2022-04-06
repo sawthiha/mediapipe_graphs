@@ -24,6 +24,24 @@ filegroup(name = "full_segmentation_gpu_data",
     ],
 )
 
+filegroup(name = "full_segmentation_gpu_pbtxts",
+    srcs = [
+        "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_gpu.pbtxt",
+        "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_gpu.pbtxt",
+        "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_gpu.pbtxt",
+    ],
+)
+
+genrule(name = "full_segmentation_header",
+    outs = ["config_header.generated.h"],
+    srcs = select({
+        "//mediapipe/gpu:disable_gpu": [":full_segmentation_cpu_pbtxts"],
+        "//conditions:default": [":full_segmentation_gpu_pbtxts"],
+    }),
+    cmd = "./$(location //mediapipe/graphs/custom:graph_header_generator) $(SRCS) > $@",
+    tools = ["//mediapipe/graphs/custom:graph_header_generator"],
+)
+
 cc_library(name = "full_segmentation_gpu_deps",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
@@ -39,6 +57,14 @@ filegroup(name = "full_segmentation_cpu_data",
         "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_cpu.binarypb",
         "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_cpu.binarypb",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
+    ],
+)
+
+filegroup(name = "full_segmentation_cpu_pbtxts",
+    srcs = [
+        "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_cpu.pbtxt",
+        "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_cpu.pbtxt",
+        "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_cpu.pbtxt",
     ],
 )
 

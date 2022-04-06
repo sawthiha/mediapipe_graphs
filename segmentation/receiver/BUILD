@@ -17,6 +17,7 @@ cc_library(
     name = "receiver_segmentation_gpu_deps",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
+        "//mediapipe/calculators/image:recolor_calculator",
         "//mediapipe/calculators/image:set_alpha_calculator",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
     ],
@@ -33,6 +34,7 @@ cc_library(
     name = "receiver_segmentation_cpu_deps",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
+        "//mediapipe/calculators/image:recolor_calculator",
         "//mediapipe/calculators/image:set_alpha_calculator",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation_cpu",
     ],
