@@ -3,11 +3,13 @@ import argparse
 from functools import reduce
 from typing import List
 
+def if_not_comment_or_empty(line: str) -> bool:
+    stripped = line.lstrip()
+    return stripped and stripped[0] != '#'
+
 def parse_graph(lines: List[str]):
-    strippeds = [line.lstrip() for line in lines]
-    filtereds: List[str] = filter(lambda line: line and line[0] != '#', strippeds)
-    compacteds = [line.replace('\n', ' ') for line in filtereds]
-    return reduce(lambda line1, line2: line1 + line2, compacteds)
+    filtereds: List[str] = filter(if_not_comment_or_empty, lines)
+    return reduce(lambda line1, line2: line1 + line2, filtereds)
 
 def parse_graph_entry(graph: str) -> str:
 	with open(graph) as f:
