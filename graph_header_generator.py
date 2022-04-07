@@ -26,14 +26,16 @@ def main():
 						help='Graph File Paths'
 	)
 	args = parser.parse_args()
+	graphs = args.graphs
+	graphs.reverse()
 	header = """#pragma once
 
-#include<map>
+#include<unordered_map>
 #include<string>
 
-static const std::map<std::string, std::string> config_map
+static const std::unordered_map<std::string, std::string> config_map
 {
-""" + str.join('\n', map(parse_graph_entry, args.graphs)) + """
+""" + str.join('\n', map(parse_graph_entry, graphs)) + """
 };
 	"""
 	print(header)
