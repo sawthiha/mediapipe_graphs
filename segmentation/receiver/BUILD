@@ -19,27 +19,20 @@ cc_library(
         "//mediapipe/calculators/core:flow_limiter_calculator",
         "//mediapipe/calculators/image:recolor_calculator",
         "//mediapipe/calculators/image:set_alpha_calculator",
-    ] + select({
-        "//mediapipe/gpu:disable_gpu": [
-            "//mediapipe/modules/selfie_segmentation:selfie_segmentation_cpu",
-        ],
-        "//conditions:default": [
-            "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
-        ],
-    }),
+    ],
 )
 
 mediapipe_binary_graph(
     name = "receiver_segmentation_gpu_binary_graph",
     graph = "receiver_segmentation_gpu.pbtxt",
     output_name = "receiver_segmentation_gpu.binarypb",
-    deps = [":receiver_segmentation_gpu_deps"],
+    deps = [":receiver_segmentation_deps"],
 )
 
 mediapipe_binary_graph(
     name = "receiver_segmentation_cpu_binary_graph",
     graph = "receiver_segmentation_cpu.pbtxt",
     output_name = "receiver_segmentation_cpu.binarypb",
-    deps = [":receiver_segmentation_cpu_deps"],
+    deps = [":receiver_segmentation_deps"],
 )
 
