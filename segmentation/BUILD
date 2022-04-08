@@ -15,38 +15,54 @@ licenses(["notice"])
 
 package(default_visibility = ["//visibility:public"])
 
-filegroup(name = "full_segmentation_gpu_data",
-    srcs = [
-        "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_gpu.binarypb",
-        "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_gpu.binarypb",
-        "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_gpu.binarypb",
-        "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
-    ],
-)
-
-cc_library(name = "full_segmentation_gpu_deps",
+cc_library(name = "full_segmentation_deps",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
         "//mediapipe/calculators/image:recolor_calculator",
         "//mediapipe/calculators/image:set_alpha_calculator",
-        "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
-    ],
+        
+    ] + select({
+        "//mediapipe/gpu:disable_gpu": [
+            "//mediapipe/modules/selfie_segmentation:selfie_segmentation_cpu",
+        ],
+        "//conditions:default": [
+            "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
+        ],
+    }),
 )
 
-filegroup(name = "full_segmentation_cpu_data",
+filegroup(name = "full_segmentation_data",
     srcs = [
-        "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_cpu.binarypb",
-        "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_cpu.binarypb",
-        "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_cpu.binarypb",
         "//mediapipe/modules/selfie_segmentation:selfie_segmentation.tflite",
     ],
 )
 
-cc_library(name = "full_segmentation_cpu_deps",
-    deps = [
-        "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/calculators/image:recolor_calculator",
-        "//mediapipe/calculators/image:set_alpha_calculator",
-        "//mediapipe/modules/selfie_segmentation:selfie_segmentation_cpu",
+genrule(name = "full_segmentation_header_gen",
+    outs = ["config_header.generated.h"],
+    srcs = [
+        ":full_segmentation_pbtxts",
     ],
+    cmd = "./$(location //mediapipe/graphs/custom:graph_header_generator) $(SRCS) > $@",
+    tools = ["//mediapipe/graphs/custom:graph_header_generator"],
+)
+
+cc_library(
+  name = "full_segmentation_header",
+  hdrs = [":full_segmentation_header_gen"],
+  include_prefix = ".",
+)
+
+filegroup(name = "full_segmentation_pbtxts",
+    srcs = select({
+        "//mediapipe/gpu:disable_gpu": [
+            "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_cpu.pbtxt",
+            "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_cpu.pbtxt",
+            "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_cpu.pbtxt",
+        ],
+        "//conditions:default": [
+            "//mediapipe/graphs/custom/segmentation/standalone:standalone_segmentation_gpu.pbtxt",
+            "//mediapipe/graphs/custom/segmentation/sender:sender_segmentation_gpu.pbtxt",
+            "//mediapipe/graphs/custom/segmentation/receiver:receiver_segmentation_gpu.pbtxt",
+        ],
+    }),
 )

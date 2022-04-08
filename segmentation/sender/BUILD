@@ -14,34 +14,31 @@ exports_files(
 )
 
 cc_library(
-    name = "sender_segmentation_gpu_deps",
+    name = "sender_segmentation_deps",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
         "//mediapipe/calculators/image:recolor_calculator",
-        "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
-    ],
+    ] + select({
+        "//mediapipe/gpu:disable_gpu": [
+            "//mediapipe/modules/selfie_segmentation:selfie_segmentation_cpu",
+        ],
+        "//conditions:default": [
+            "//mediapipe/modules/selfie_segmentation:selfie_segmentation_gpu",
+        ],
+    }),
 )
 
 mediapipe_binary_graph(
     name = "sender_segmentation_gpu_binary_graph",
     graph = "sender_segmentation_gpu.pbtxt",
     output_name = "sender_segmentation_gpu.binarypb",
-    deps = [":sender_segmentation_gpu_deps"],
-)
-
-cc_library(
-    name = "sender_segmentation_cpu_deps",
-    deps = [
-        "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/calculators/image:recolor_calculator",
-        "//mediapipe/modules/selfie_segmentation:selfie_segmentation_cpu",
-    ],
+    deps = [":sender_segmentation_deps"],
 )
 
 mediapipe_binary_graph(
     name = "sender_segmentation_cpu_binary_graph",
     graph = "sender_segmentation_cpu.pbtxt",
     output_name = "sender_segmentation_cpu.binarypb",
-    deps = [":sender_segmentation_cpu_deps"],
+    deps = [":sender_segmentation_deps"],
 )
 
