@@ -28,66 +28,40 @@ exports_files(
 )
 
 cc_library(
-    name = "custom_calculators",
+    name = "playback_calculators",
     deps = [
-        "//mediapipe/calculators/custom/util:landmark_standardization",
-        "//mediapipe/calculators/custom/face_alignment:face_alignment_calculator",
-        "//mediapipe/calculators/custom/eye_blink:eye_blink_calculator",
-        "//mediapipe/calculators/custom/face_activity:face_movement_calculator",
-    ],
-)
-
-cc_library(
-    name = "desktop_calculators",
-    deps = [
-        "//mediapipe/calculators/core:constant_side_packet_calculator",
         "//mediapipe/calculators/video:opencv_video_decoder_calculator",
         "//mediapipe/calculators/video:opencv_video_encoder_calculator",
-        "//mediapipe/modules/face_landmark:face_landmark_front_cpu",
 
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_cpu",
-        ":custom_calculators",
-    ],
+        "//mediapipe/graphs/custom/face_mesh:facemesh_deps",
+    ] + select({
+        "//mediapipe/gpu:disable_gpu": [
+            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_cpu",
+        ],
+        "//conditions:default": [
+            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_gpu",
+        ],
+    }),,
 )
 
 cc_library(
-    name = "desktop_live_calculators",
-    deps = [
-        "//mediapipe/calculators/core:constant_side_packet_calculator",
-        "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/modules/face_landmark:face_landmark_front_cpu",
-
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_cpu",
-        ":custom_calculators",
-    ],
-)
-
-cc_library(
-    name = "desktop_live_gpu_calculators",
-    deps = [
-        "//mediapipe/calculators/core:constant_side_packet_calculator",
-        "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/modules/face_landmark:face_landmark_front_gpu",
-
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_gpu",
-        ":custom_calculators",
-    ],
-)
-
-cc_library(
-    name = "mobile_calculators",
+    name = "live_calculators",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
-        "//mediapipe/modules/face_landmark:face_landmark_front_gpu",
-
-        "//mediapipe/graphs/custom/face_mesh/subgraphs:face_renderer_gpu",
-        ":custom_calculators",
-    ],
+        "//mediapipe/graphs/custom/face_mesh:facemesh_deps",
+    ] + select({
+        "//mediapipe/gpu:disable_gpu": [
+            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_cpu",
+        ],
+        "//conditions:default": [
+            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_gpu",
+        ],
+    }),
 )
 
 mediapipe_binary_graph(
     name = "face_mesh_mobile_gpu_binary_graph",
     graph = "face_mesh_mobile.pbtxt",
     output_name = "face_mesh_mobile_gpu.binarypb",
-    deps = [":mobile_calculators"],
+    deps = [":facemesh_live_calculators"],
 )
