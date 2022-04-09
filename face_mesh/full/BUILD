@@ -36,12 +36,12 @@ cc_library(
         "//mediapipe/graphs/custom/face_mesh:facemesh_deps",
     ] + select({
         "//mediapipe/gpu:disable_gpu": [
-            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_cpu",
+            "//mediapipe/graphs/custom/face_mesh/full/subgraphs:face_renderer_cpu",
         ],
         "//conditions:default": [
-            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_gpu",
+            "//mediapipe/graphs/custom/face_mesh/full/subgraphs:face_renderer_gpu",
         ],
-    }),,
+    }),
 )
 
 cc_library(
@@ -51,10 +51,10 @@ cc_library(
         "//mediapipe/graphs/custom/face_mesh:facemesh_deps",
     ] + select({
         "//mediapipe/gpu:disable_gpu": [
-            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_cpu",
+            "//mediapipe/graphs/custom/face_mesh/full/subgraphs:face_renderer_cpu",
         ],
         "//conditions:default": [
-            "//mediapipe/graphs/custom/face_mesh/standalone/subgraphs:face_renderer_gpu",
+            "//mediapipe/graphs/custom/face_mesh/full/subgraphs:face_renderer_gpu",
         ],
     }),
 )
@@ -63,5 +63,5 @@ mediapipe_binary_graph(
     name = "face_mesh_mobile_gpu_binary_graph",
     graph = "face_mesh_mobile.pbtxt",
     output_name = "face_mesh_mobile_gpu.binarypb",
-    deps = [":facemesh_live_calculators"],
+    deps = [":live_calculators"],
 )
