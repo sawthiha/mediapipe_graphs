@@ -1,4 +1,5 @@
-# Minimal Facemesh Analytics (i.e. without )
+# MediaPipe Facemesh solution extension that support face aligment, blink detection
+# Minimal with no annotated video output
 
 # Input image. (GpuBuffer)
 input_stream: "input_video"

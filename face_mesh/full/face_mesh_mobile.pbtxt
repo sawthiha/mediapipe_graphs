@@ -1,5 +1,5 @@
-# Customized MediaPipe graph that performs face mesh with TensorFlow Lite
-# on GPU.
+# MediaPipe Facemesh solution extension that support face aligment, blink detection
+# Full with annotated video output
 
 # GPU buffer. (GpuBuffer)
 input_stream: "input_video"

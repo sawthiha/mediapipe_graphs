@@ -1,5 +1,5 @@
-# MediaPipe graph that performs face mesh on desktop with TensorFlow Lite
-# on CPU.
+# MediaPipe Facemesh solution extension that support face aligment, blink detection
+# Full with annotated video output
 
 # Path to the input video file. (string)
 input_side_packet: "input_video_path"
