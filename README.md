@@ -5,6 +5,7 @@ Custom graphs for Mediapipe framework.
 - Extended Face Mesh Graph
     - Alignment (With RenderDataCalculator)
     - Eye Blink (With RenderDataCalculator)
+    - Minimal Solution with no annotated output
 
 - Extended Selfie Segmentation
     - Standalone (With Apha Channel Mask)
