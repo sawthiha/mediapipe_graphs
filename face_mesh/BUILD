@@ -9,6 +9,7 @@ cc_library(
         "//mediapipe/calculators/custom/face_alignment:face_alignment_calculator",
         "//mediapipe/calculators/custom/eye_blink:eye_blink_calculator",
         "//mediapipe/calculators/custom/face_activity:face_movement_calculator",
+        "//mediapipe/calculators/custom/face_activity:face_activity_calculator",
     ],
 )
 
