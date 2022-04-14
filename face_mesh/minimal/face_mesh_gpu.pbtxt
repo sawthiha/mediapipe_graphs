@@ -29,6 +29,12 @@ output_stream: "multi_face_alignments"
 # }
 output_stream: "multi_face_blinks"
 
+# Face Position Deltas (std::vector<double>)
+output_stream: "multi_face_movements"
+
+# Facial Activity Deltas (std::vector<double>)
+output_stream: "multi_face_activities"
+
 # Throttles the images flowing downstream for flow control. It passes through
 # the very first incoming image unaltered, and waits for downstream nodes
 # (calculators and subgraphs) in the graph to finish their tasks before it
@@ -79,6 +85,20 @@ node {
   input_stream: "IMAGE:throttled_input_video"
   input_stream: "multi_face_landmarks"
   output_stream: "multi_face_std_landmarks"
+}
+
+# Detect face movements
+node {
+  calculator: "FaceMovementCalculator"
+  input_stream: "multi_face_landmarks"
+  output_stream: "multi_face_movements"
+}
+
+# Detect facial activity
+node {
+  calculator: "FaceActivityCalculator"
+  input_stream: "multi_face_std_landmarks"
+  output_stream: "multi_face_activities"
 }
 
 # Detect alignments
