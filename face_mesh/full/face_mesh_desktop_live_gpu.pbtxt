@@ -32,6 +32,9 @@ output_stream: "multi_face_alignments"
 # }
 output_stream: "multi_face_blinks"
 
+# Facial Activity Deltas (std::vector<double>)
+output_stream: "multi_face_activities"
+
 # Throttles the images flowing downstream for flow control. It passes through
 # the very first incoming image unaltered, and waits for downstream nodes
 # (calculators and subgraphs) in the graph to finish their tasks before it
@@ -91,6 +94,13 @@ node {
   calculator: "FaceAlignmentCalculator"
   input_stream: "multi_face_std_landmarks"
   output_stream: "multi_face_alignments"
+}
+
+# Detect facial activity
+node {
+  calculator: "FaceActivityCalculator"
+  input_stream: "multi_face_std_landmarks"
+  output_stream: "multi_face_activities"
 }
 
 # Detect Eye blink
