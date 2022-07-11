@@ -26,3 +26,36 @@ cc_library(name = "facemesh_deps",
         ],
     }),
 )
+
+filegroup(name = "minimal_face_mesh_pbtxts",
+    srcs = select({
+        "//mediapipe/gpu:disable_gpu": [
+            "//mediapipe/graphs/custom/face_mesh/minimal:face_mesh_cpu.pbtxt",
+        ],
+        "//conditions:default": [
+            "//mediapipe/graphs/custom/face_mesh/minimal:face_mesh_gpu.pbtxt",
+        ],
+    }),
+)
+
+genrule(name = "minimal_face_mesh_header_gen",
+    outs = ["config_header.generated.h"],
+    srcs = [
+        ":minimal_face_mesh_pbtxts",
+    ],
+    cmd = "./$(location //mediapipe/graphs/custom:graph_header_generator) $(SRCS) > $@",
+    tools = ["//mediapipe/graphs/custom:graph_header_generator"],
+)
+
+cc_library(
+  name = "minimal_face_mesh_header",
+  hdrs = [":minimal_face_mesh_header_gen"],
+  include_prefix = ".",
+)
+
+filegroup(name = "face_mesh_data",
+    srcs = [
+        "//mediapipe/modules/face_detection:face_detection_short_range.tflite",
+        "//mediapipe/modules/face_landmark:face_landmark_with_attention.tflite",
+    ],
+)
