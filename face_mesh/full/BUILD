@@ -48,6 +48,8 @@ cc_library(
     name = "live_calculators",
     deps = [
         "//mediapipe/calculators/core:flow_limiter_calculator",
+        "//mediapipe/calculators/custom/util:proctor_result_calculator",
+        "//mediapipe/calculators/core:packet_cloner_calculator",
         "//mediapipe/graphs/custom/face_mesh:facemesh_deps",
     ] + select({
         "//mediapipe/gpu:disable_gpu": [

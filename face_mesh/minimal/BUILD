@@ -11,6 +11,8 @@ exports_files(
 cc_library(
     name = "live_calculators",
     deps = [
+        "//mediapipe/calculators/custom/util:proctor_result_calculator",
+        "//mediapipe/calculators/custom/util:proctor_result",
         "//mediapipe/calculators/core:flow_limiter_calculator",
         "//mediapipe/graphs/custom/face_mesh:facemesh_deps",
     ],

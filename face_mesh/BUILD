@@ -10,12 +10,16 @@ cc_library(
         "//mediapipe/calculators/custom/eye_blink:eye_blink_calculator",
         "//mediapipe/calculators/custom/face_activity:face_movement_calculator",
         "//mediapipe/calculators/custom/face_activity:face_activity_calculator",
+        "//mediapipe/calculators/custom/util:proctor_result_calculator",
+        "//mediapipe/calculators/custom/util:proctor_result",
     ],
 )
 
 cc_library(name = "facemesh_deps",
     deps = [
         "//mediapipe/calculators/core:constant_side_packet_calculator",
+        "//mediapipe/calculators/core:flow_limiter_calculator",
+        "//mediapipe/calculators/core:packet_cloner_calculator",
         ":custom_calculators"
     ] + select({
         "//mediapipe/gpu:disable_gpu": [

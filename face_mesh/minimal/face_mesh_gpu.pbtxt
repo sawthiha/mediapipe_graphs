@@ -4,36 +4,8 @@
 # Input image. (GpuBuffer)
 input_stream: "input_video"
 
-# Max number of faces to detect/process. (int)
-input_side_packet: "num_faces"
-
-# Collection of detected/processed faces, each represented as a list of
-# landmarks. (std::vector<NormalizedLandmarkList>)
-output_stream: "multi_face_landmarks"
-
-# Standardized Landmarks (std::vector<NormalizedLandmarkList>)
-output_stream: "multi_face_std_landmarks"
-
-# Alignment data (std::vector<std::map<std::string, double> >)
-# {
-#   "horizontal_align": 0.0 being neutral, + being right, - being left
-#   "vertical_align":   0.0 being neutral, + being down,  - being up
-# }
-output_stream: "multi_face_alignments"
-
-# Eye blink data (std::vector<std::map<std::string, double> >)
-# {
-#   'left': double, lower value means eye is closing
-#   'right': double, lower value means eye is closing
-#   'threshold': double, a threshold value for detection, e.g. left eye is blinking if 'left' < 'threshold'
-# }
-output_stream: "multi_face_blinks"
-
-# Face Position Deltas (std::vector<double>)
-output_stream: "multi_face_movements"
-
-# Facial Activity Deltas (std::vector<double>)
-output_stream: "multi_face_activities"
+# Multi-face proctor result <std::vector<ProctorResult>>
+output_stream: "multi_face_std_prctor_results"
 
 # Throttles the images flowing downstream for flow control. It passes through
 # the very first incoming image unaltered, and waits for downstream nodes
@@ -59,9 +31,11 @@ node {
 # Defines side packets for further use in the graph.
 node {
   calculator: "ConstantSidePacketCalculator"
+  output_side_packet: "PACKET:0:num_faces"
   output_side_packet: "PACKET:1:with_attention"
   node_options: {
     [type.googleapis.com/mediapipe.ConstantSidePacketCalculatorOptions]: {
+      packet { int_value: 1 }
       packet { bool_value: true }
     }
   }
@@ -79,38 +53,74 @@ node {
   output_stream: "ROIS_FROM_DETECTIONS:face_rects_from_detections"
 }
 
+# Outputs each element of multi_face_landmarks at a fake timestamp for the rest
+# of the graph to process. At the end of the loop, outputs the BATCH_END
+# timestamp for downstream calculators to inform them that all elements in the
+# vector have been processed.
+node {
+  calculator: "BeginLoopNormalizedLandmarkListVectorCalculator"
+  input_stream: "ITERABLE:multi_face_landmarks"
+  output_stream: "ITEM:face_landmarks"
+  output_stream: "BATCH_END:landmark_timestamp"
+}
+
 # Standardize the landmarks
 node {
   calculator: "LandmarkStandardizationCalculator"
-  input_stream: "IMAGE:throttled_input_video"
-  input_stream: "multi_face_landmarks"
-  output_stream: "multi_face_std_landmarks"
+  input_stream: "face_landmarks"
+  output_stream: "face_std_landmarks"
 }
 
 # Detect face movements
 node {
   calculator: "FaceMovementCalculator"
-  input_stream: "multi_face_landmarks"
-  output_stream: "multi_face_movements"
+  input_stream: "face_landmarks"
+  output_stream: "face_movement"
 }
 
 # Detect facial activity
 node {
   calculator: "FaceActivityCalculator"
-  input_stream: "multi_face_std_landmarks"
-  output_stream: "multi_face_activities"
+  input_stream: "face_std_landmarks"
+  output_stream: "face_activity"
 }
 
 # Detect alignments
 node {
   calculator: "FaceAlignmentCalculator"
-  input_stream: "multi_face_std_landmarks"
-  output_stream: "multi_face_alignments"
+  input_stream: "face_std_landmarks"
+  output_stream: "face_alignments"
 }
 
 # Detect Eye blink
 node {
   calculator: "EyeBlinkCalculator"
-  input_stream: "multi_face_std_landmarks"
-  output_stream: "multi_face_blinks"
+  input_stream: "face_std_landmarks"
+  output_stream: "face_blinks"
+}
+
+node  {
+  calculator: "ProctorResultCalculator"
+  input_stream: "ALIGN:face_alignments"
+  input_stream: "BLINK:face_blinks"
+  input_stream: "ACTIVE:face_activity"
+  input_stream: "MOVE:face_movement"
+  output_stream: "RESULT:face_proctor_results"
+}
+
+# Collects a ProctorResult object for each hand into a vector. Upon receiving the
+# BATCH_END timestamp, outputs the vector of ProctorResult at the BATCH_END
+# timestamp.
+node {
+  calculator: "EndLoopProctorResultVectorCalculator"
+  input_stream: "ITEM:face_proctor_results"
+  input_stream: "BATCH_END:landmark_timestamp"
+  output_stream: "ITERABLE:multi_face_std_prctor_results"
+}
+
+node {
+  calculator: "PacketClonerCalculator"
+  input_stream: "TICK:throttled_input_video"
+  input_stream: "throttled_input_video"
+  output_stream: "output_video"
 }
