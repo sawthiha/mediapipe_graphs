@@ -32,10 +32,8 @@ cc_library(
         "//mediapipe/calculators/util:landmarks_to_render_data_calculator_cc_proto",
 
         "//mediapipe/calculators/util:rect_to_render_data_calculator",
+        "//mediapipe/calculators/custom/util:proctor_result_to_render_data_calculator",
         # "//mediapipe/framework/stream_handler:immediate_input_stream_handler",
-
-        "//mediapipe/calculators/custom/face_alignment:face_alignment_to_render_data_calculator",
-        "//mediapipe/calculators/custom/eye_blink:eye_blink_to_render_data_calculator",
 
         "//mediapipe/framework:calculator_framework",
         "//mediapipe/framework:calculator_options_cc_proto",

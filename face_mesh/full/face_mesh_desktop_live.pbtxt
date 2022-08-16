@@ -67,73 +67,65 @@ node {
   output_stream: "BATCH_END:landmark_timestamp"
 }
 
-# Standardize the landmarks
-node {
-  calculator: "LandmarkStandardizationCalculator"
-  input_stream: "face_landmarks"
-  output_stream: "face_std_landmarks"
-}
+  # Standardize the landmarks
+  node {
+    calculator: "LandmarkStandardizationCalculator"
+    input_stream: "face_landmarks"
+    output_stream: "face_std_landmarks"
+  }
 
-# Detect face movements
-node {
-  calculator: "FaceMovementCalculator"
-  input_stream: "face_landmarks"
-  output_stream: "face_movement"
-}
+  # Detect face movements
+  node {
+    calculator: "FaceMovementCalculator"
+    input_stream: "face_landmarks"
+    output_stream: "face_movement"
+  }
 
-# Detect facial activity
-node {
-  calculator: "FaceActivityCalculator"
-  input_stream: "face_std_landmarks"
-  output_stream: "face_activity"
-}
+  # Detect facial activity
+  node {
+    calculator: "FaceActivityCalculator"
+    input_stream: "face_std_landmarks"
+    output_stream: "face_activity"
+  }
 
-# Detect alignments
-node {
-  calculator: "FaceAlignmentCalculator"
-  input_stream: "face_std_landmarks"
-  output_stream: "face_alignments"
-}
+  # Detect alignments
+  node {
+    calculator: "FaceAlignmentCalculator"
+    input_stream: "face_std_landmarks"
+    output_stream: "face_alignments"
+  }
 
-# Detect Eye blink
-node {
-  calculator: "EyeBlinkCalculator"
-  input_stream: "face_std_landmarks"
-  output_stream: "face_blinks"
-}
+  # Detect Eye blink
+  node {
+    calculator: "EyeBlinkCalculator"
+    input_stream: "face_std_landmarks"
+    output_stream: "face_blinks"
+  }
 
-node  {
-  calculator: "ProctorResultCalculator"
-  input_stream: "ALIGN:face_alignments"
-  input_stream: "BLINK:face_blinks"
-  input_stream: "ACTIVE:face_activity"
-  input_stream: "MOVE:face_movement"
-  output_stream: "RESULT:face_proctor_results"
-}
+  node  {
+    calculator: "ProctorResultCalculator"
+    input_stream: "ALIGN:face_alignments"
+    input_stream: "BLINK:face_blinks"
+    input_stream: "ACTIVE:face_activity"
+    input_stream: "MOVE:face_movement"
+    output_stream: "RESULT:face_proctor_result"
+  }
 
 # Collects a ProctorResult object for each hand into a vector. Upon receiving the
 # BATCH_END timestamp, outputs the vector of ProctorResult at the BATCH_END
 # timestamp.
 node {
   calculator: "EndLoopProctorResultVectorCalculator"
-  input_stream: "ITEM:face_proctor_results"
+  input_stream: "ITEM:face_proctor_result"
   input_stream: "BATCH_END:landmark_timestamp"
-  output_stream: "ITERABLE:multi_face_std_prctor_results"
-}
-
-node {
-  calculator: "PacketClonerCalculator"
-  input_stream: "TICK:throttled_input_video"
-  input_stream: "throttled_input_video"
-  output_stream: "output_video"
+  output_stream: "ITERABLE:multi_face_proctor_results"
 }
 
 # Subgraph that renders face-landmark annotation onto the input image.
-# node {
-#   calculator: "FaceRendererCpu"
-#   input_stream: "IMAGE:throttled_input_video"
-#   input_stream: "NORM_RECTS:face_rects_from_landmarks"
-#   input_stream: "ALIGNMENTS:multi_face_alignments"
-#   input_stream: "BLINKS:multi_face_blinks"
-#   output_stream: "IMAGE:output_video"
-# }
+node {
+  calculator: "FaceRendererCpu"
+  input_stream: "IMAGE:throttled_input_video"
+  input_stream: "NORM_RECTS:face_rects_from_landmarks"
+  input_stream: "RESULT:multi_face_proctor_results"
+  output_stream: "IMAGE:output_video"
+}
