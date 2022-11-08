@@ -12,6 +12,9 @@ Custom graphs for Mediapipe framework.
     - Sender (With Red Channel Mask)
     - Receiver (Convert Red Channel Mask to Alpha Channel Mask)
 
+## Requirement
+- Mediapipe v0.8.10.2 (Simply checkout on [this commit](https://github.com/google/mediapipe/commit/63e679d9))
+
 ## Installation
 You simply put this source directory as submodule into `mediapipe/graphs/custom` or anywhere else inside `mediapipe` where you can reference from bazel. Or, simply run the following commands from the `mediapipe` root directory.
 
