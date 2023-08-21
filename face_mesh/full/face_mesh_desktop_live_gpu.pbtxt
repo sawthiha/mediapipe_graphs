@@ -88,11 +88,11 @@ node {
   output_stream: "face_activity"
 }
 
-# Detect alignments
+# Detect orientations
 node {
-  calculator: "FaceAlignmentCalculator"
+  calculator: "FaceOrientationCalculator"
   input_stream: "face_std_landmarks"
-  output_stream: "face_alignments"
+  output_stream: "face_orientations"
 }
 
 # Detect Eye blink
@@ -104,7 +104,7 @@ node {
 
 node  {
   calculator: "ProctorResultCalculator"
-  input_stream: "ALIGN:face_alignments"
+  input_stream: "ORIENT:face_orientations"
   input_stream: "BLINK:face_blinks"
   input_stream: "ACTIVE:face_activity"
   input_stream: "MOVE:face_movement"
@@ -132,7 +132,7 @@ node {
 #   calculator: "FaceRendererGpu"
 #   input_stream: "IMAGE:throttled_input_video"
 #   input_stream: "NORM_RECTS:face_rects_from_landmarks"
-#   input_stream: "ALIGNMENTS:multi_face_alignments"
+#   input_stream: "orientationS:multi_face_orientations"
 #   input_stream: "BLINKS:multi_face_blinks"
 #   output_stream: "IMAGE:output_video"
 # }

@@ -8,9 +8,9 @@ input_stream: "IMAGE:input_image"
 # (std::vector<NormalizedRect>)
 input_stream: "NORM_RECTS:rects"
 
-# Multi-face Alignment data
+# Multi-face orientation data
 # (std::vector<std::map<std::string, double>>)
-input_stream: "ALIGNMENTS:multi_face_alignments"
+input_stream: "ALIGNMENTS:multi_face_orientations"
 
 # Multi-face blink data
 # (std::vector<std::map<std::string, double>>)
@@ -26,11 +26,11 @@ node {
   output_stream: "SIZE:image_size"
 }
 
-# Convert the FaceAlignment to RenderData
+# Convert the FaceOrientation to RenderData
 node {
-  calculator: "FaceAlignmentToRenderDataCalculator"
-  input_stream: "ALIGNMENT:multi_face_alignments"
-  output_stream: "RENDER:alignment_render_data"
+  calculator: "FaceOrientationToRenderDataCalculator"
+  input_stream: "ORIENTATION:multi_face_orientations"
+  output_stream: "RENDER:orientation_render_data"
 }
 
 # Converts detected eye blinks to drawing primitives for annotation overlay.
@@ -64,7 +64,7 @@ node {
   #  input_stream_handler: "ImmediateInputStreamHandler"
   # }
 
-  input_stream: "alignment_render_data"
+  input_stream: "orientation_render_data"
   input_stream: "blink_render_data"
   input_stream: "rects_render_data"
 

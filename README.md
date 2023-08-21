@@ -3,7 +3,7 @@ Custom graphs for Mediapipe framework.
 
 ## Features
 - Extended Face Mesh Graph
-    - Alignment (With RenderDataCalculator)
+    - orientation (With RenderDataCalculator)
     - Eye Blink (With RenderDataCalculator)
     - Minimal Solution with no annotated output
 

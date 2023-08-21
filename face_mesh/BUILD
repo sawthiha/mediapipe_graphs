@@ -45,7 +45,7 @@ filegroup(name = "minimal_face_mesh_pbtxts",
 genrule(name = "minimal_face_mesh_header_gen",
     outs = ["config_header.generated.h"],
     srcs = [
-        ":minimal_face_mesh_pbtxts",
+        "//mp_proctor/graphs:minimal_face_mesh_pbtxts",
     ],
     cmd = "./$(location //mediapipe/graphs/custom:graph_header_generator) $(SRCS) > $@",
     tools = ["//mediapipe/graphs/custom:graph_header_generator"],
